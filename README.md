@@ -95,6 +95,65 @@ VALUES
 - [x] Ingresar a la carpeta **“2_SCRIPTs_de_Tablas_e_Inserts”**, para ver los Scripts completos de Tablas e Inserts del Sistema de Ventas.
 
 ## Consultas SQL
+En esta fase se tienen algunos ejemplos de consultas SQL con el fin de verificar la implementación de la base de datos Relacional (_Sistema de Ventas: Supermercado_), además, ilustrar la sintaxis de las consultas SQL manejadas en este proyecto; tales como:
+
+**1. Traer la lista de productos vendidos (_solo su ID_) sin repeticiones y con el total vendido.**
+
+***Código:***
+
+```sql
+SELECT VD_ProdId AS Producto,
+       SUM(VD_Cantidad * VD_Precio) AS Total
+FROM ventas_detalle
+GROUP BY Producto
+```
+
+**_Captura:_**
+
+<p align="center">
+  <img src="./images/consulta_1.png" />
+</p>
 
 
+**2. Mostrar la fecha de factura, nro. de factura, ID del producto, descripción del producto, ID del proveedor, nombre de proveedor, cantidad, precio unitario y parcial (_cantidad * precio_).**
+
+***Código:***
+
+```sql
+SELECT Ventas_Fecha AS Fecha, Ventas_NroFactura AS Factura,
+      VD_ProdId AS Producto, Prod_Descripcion AS Descripcion,
+      Prod_ProvId AS Proveedor, Prov_Nombre AS Nombre,
+      VD_Cantidad AS Cantidad, VD_Precio AS 'Precio Unitario',
+      (VD_Cantidad * VD_Precio) AS Parcial
+FROM ventas
+  JOIN ventas_detalle ON Ventas_Id = VD_VentasId
+  JOIN productos ON VD_ProdId = Prod_Id
+  JOIN proveedores ON Prod_ProvId = Prov_Id
+```
+
+**_Captura:_**
+
+<p align="center">
+  <img src="./images/consulta_5.png" />
+</p>
+
+**3. Mostrar todos los artículos cuya descripción tenga el String (_cadena_) 'TEFLON' y que tengan ventas realizadas.**
+
+***Código:***
+
+```sql
+SELECT Prod_Id, Prod_Descripcion
+FROM productos
+WHERE Prod_Descripcion LIKE '%TEFLON%' AND
+      Prod_Id IN (SELECT DISTINCT(VD_ProdId)
+                  FROM ventas_detalle)
+```
+
+**_Captura:_**
+
+<p align="center">
+  <img src="./images/consulta_9.png" />
+</p>
+
+- [x] Para ver más ejemplos ingresar a la carpeta **“3_Consultas_SQL”**.
 
